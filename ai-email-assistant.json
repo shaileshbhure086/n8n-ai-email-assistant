@@ -1,0 +1,155 @@
+{
+  "name": "AI Email Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Kratos. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "06cd315e-3b1f-42e6-95ac-98f0ea76cf19",
+      "name": "When chat message received",
+      "webhookId": "2b70c6c9-b5d6-4013-a129-a576399ed37d"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a professional email assistant.\nRewrite the provided email draft into a polished, professional email without copying it verbatim. Preserve the original intent while improving clarity, tone, and structure.\n\nGenerate:\n- A clear and engaging subject line.\n- A concise, well-structured email body.\n\nAlways end with:\nRegards,\nShailesh Bhure\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "6e79429e-a0f6-4857-9abd-4d571b723da9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        208
+      ],
+      "id": "d69237cc-b664-4eb3-923c-b4de06261780",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        272,
+        208
+      ],
+      "id": "01cadcbd-2221-4226-b9a7-5ee7b0723ab4",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        208
+      ],
+      "id": "054cbd99-56b2-4c45-a47f-583b4895c425",
+      "name": "Send a message in Gmail",
+      "webhookId": "bec1682f-838d-4d5b-8c08-31b7b79251c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Yp9fL3KZxMeqPAA8",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9a525901-08ee-4984-b34a-3c8ab61b7657",
+ 
+  "nodeGroups": [],
+  "id": "HuLnjoH8sEgfXIkk",
+  "tags": []
+}
